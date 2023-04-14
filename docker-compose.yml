@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+
+  users_db:
+    image: postgres:15.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres1
+      POSTGRES_PASSWORD: postgres1
+      POSTGRES_DB: user
+    ports:
+      - "5440:5432"
+    volumes:
+      - "C:/postgres/posting-system/userdb/data:/var/lib/postgresql/data"
+    networks:
+      - backend
+
+networks:
+  backend:
