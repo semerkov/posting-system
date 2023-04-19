@@ -15,6 +15,8 @@ public class UserConverter {
     }
 
     public UserResponseDto convertToUserResponseDto(User user) {
-        return new UserResponseDto(user.getId(), user.getUsername(), user.getAmountOfPosts());
+        return new UserResponseDto(user.getId(),
+                user.getUsername(),
+                user.getAmountOfPosts());
     }
 }

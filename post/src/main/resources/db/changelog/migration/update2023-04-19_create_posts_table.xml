@@ -1,0 +1,33 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="update2023-04-19_create_posts_table" author="v.semerkov" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="posts" schemaName="public"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="posts" schemaName="public">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="author_id" type="bigserial">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="text" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="posted_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

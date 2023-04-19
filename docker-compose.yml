@@ -3,6 +3,7 @@ version: "3.8"
 services:
 
   users_db:
+    container_name: users_db
     image: postgres:15.2-alpine
     restart: always
     environment:
@@ -12,7 +13,22 @@ services:
     ports:
       - "5440:5432"
     volumes:
-      - "C:/postgres/posting-system/userdb/data:/var/lib/postgresql/data"
+      - "C:/postgres/posting-system/users_db/data:/var/lib/postgresql/data"
+    networks:
+      - backend
+
+  posts_db:
+    container_name: posts_db
+    image: postgres:15.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres1
+      POSTGRES_PASSWORD: postgres1
+      POSTGRES_DB: post
+    ports:
+      - "5441:5432"
+    volumes:
+      - "C:/postgres/posting-system/posts_db/data:/var/lib/postgresql/data"
     networks:
       - backend
 

@@ -1,4 +1,4 @@
-package com.services.user.domain;
+package com.services.post.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,14 +9,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "posts")
+public class Post {
 
     /**
-     * User identifier
+     * Post identifier
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +26,20 @@ public class User {
     private long id;
 
     /**
-     * Username
+     * Identifier of a user who created a post
      */
-    @Column(length = 255, nullable = false, unique = true)
-    private String username;
-
+    @Column
+    private long authorId;
 
     /**
-     * Amount of posts for the user
+     * Text of the post
+     */
+    @Column(length = 1000, nullable = false)
+    private String text;
+
+    /**
+     * Date when the post was created
      */
     @Column(nullable = false)
-    private int amountOfPosts;
+    private LocalDateTime postedAt;
 }
