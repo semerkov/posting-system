@@ -53,4 +53,10 @@ public class UserService {
         userRepository.updateUsernameById(id, username);
         return userRepository.findById(id);
     }
+
+    @Transactional
+    public int updateAmountOfPostsById(long id, int amountChange) {
+        userRepository.updateAmountOfPostsById(id, amountChange);
+        return userRepository.getAmountOfPostsById(id);
+    }
 }

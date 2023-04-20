@@ -18,4 +18,11 @@ public interface UserRepository extends CrudRepository<User, Long> {
     @Modifying
     @Query(value = "UPDATE users SET username = :username WHERE id = :id", nativeQuery = true)
     void updateUsernameById(@Param("id") long id, @Param("username") String username);
+
+    @Modifying
+    @Query(value = "UPDATE users SET amount_of_posts = amount_of_posts + :amountChange WHERE id = :id", nativeQuery = true)
+    void updateAmountOfPostsById(@Param("id") long id, @Param("amountChange") int amountChange);
+
+    @Query(value = "SELECT amount_of_posts FROM users WHERE id = :id", nativeQuery = true)
+    int getAmountOfPostsById(@Param("id") long id);
 }
