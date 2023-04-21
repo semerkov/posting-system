@@ -9,4 +9,4 @@ RUN mkdir /app
 
 COPY --from=build /home/app/target/post-0.0.1.jar /app/post.jar
 
-ENTRYPOINT ["java", "-jar", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1050", "/app/post.jar"]
+ENTRYPOINT ["java", "-jar", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:1051", "/app/post.jar"]

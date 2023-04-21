@@ -12,7 +12,7 @@
 
 	<groupId>com.services.user</groupId>
 	<artifactId>user</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>user</name>
 	<description>User service</description>
 

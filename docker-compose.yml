@@ -2,10 +2,9 @@ version: "3.8"
 
 services:
 
-  users_db:
-    container_name: users_db
+  users-db:
+    container_name: users-db
     image: postgres:15.2-alpine
-    restart: always
     environment:
       POSTGRES_USER: postgres1
       POSTGRES_PASSWORD: postgres1
@@ -17,10 +16,9 @@ services:
     networks:
       - backend
 
-  posts_db:
-    container_name: posts_db
+  posts-db:
+    container_name: posts-db
     image: postgres:15.2-alpine
-    restart: always
     environment:
       POSTGRES_USER: postgres1
       POSTGRES_PASSWORD: postgres1
@@ -31,6 +29,40 @@ services:
       - "C:/postgres/posting-system/posts_db/data:/var/lib/postgresql/data"
     networks:
       - backend
+
+  user-service:
+    container_name: user-service
+    image: epamvolodymyrsemerkov/user-service:1.0.0
+    hostname: user-service
+    depends_on:
+      - users-db
+    restart: on-failure
+    ports:
+      - "8070:8070"
+    networks:
+      - backend
+    environment:
+      - DB_URL=jdbc:postgresql://users-db:5432/user
+      - DB_USERNAME=postgres1
+      - DB_PASSWORD=postgres1
+
+  post-service:
+    container_name: post-service
+    image: epamvolodymyrsemerkov/post-service:1.0.0
+    hostname: user-service
+    depends_on:
+      - posts-db
+      - user-service
+    restart: on-failure
+    ports:
+      - "8071:8071"
+    networks:
+      - backend
+    environment:
+      - DB_URL=jdbc:postgresql://posts-db:5432/post
+      - DB_USERNAME=postgres1
+      - DB_PASSWORD=postgres1
+      - USER_SERVICE_URL=http:user-service//:8070
 
 networks:
   backend:
