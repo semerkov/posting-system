@@ -49,7 +49,7 @@ services:
   post-service:
     container_name: post-service
     image: epamvolodymyrsemerkov/post-service:1.0.0
-    hostname: user-service
+    hostname: post-service
     depends_on:
       - posts-db
       - user-service
@@ -62,7 +62,7 @@ services:
       - DB_URL=jdbc:postgresql://posts-db:5432/post
       - DB_USERNAME=postgres1
       - DB_PASSWORD=postgres1
-      - USER_SERVICE_URL=http:user-service//:8070
+      - USER_SERVICE_URL=http://user-service:8070
 
 networks:
   backend:
