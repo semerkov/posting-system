@@ -13,6 +13,11 @@ services:
       - "5440:5432"
     volumes:
       - "C:/postgres/posting-system/users_db/data:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready -U postgres1 -d user
+      interval: 5s
+      timeout: 3s
+      retries: 5
     networks:
       - backend
 
@@ -27,6 +32,11 @@ services:
       - "5441:5432"
     volumes:
       - "C:/postgres/posting-system/posts_db/data:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready -U postgres1 -d post
+      interval: 5s
+      timeout: 3s
+      retries: 5
     networks:
       - backend
 
@@ -35,7 +45,8 @@ services:
     image: epamvolodymyrsemerkov/user-service:1.0.0
     hostname: user-service
     depends_on:
-      - users-db
+      users-db:
+        condition: service_healthy
     restart: on-failure
     ports:
       - "8070:8070"
@@ -51,8 +62,10 @@ services:
     image: epamvolodymyrsemerkov/post-service:1.0.0
     hostname: post-service
     depends_on:
-      - posts-db
-      - user-service
+      posts-db:
+        condition: service_healthy
+      user-service:
+        condition: service_started
     restart: on-failure
     ports:
       - "8071:8071"
