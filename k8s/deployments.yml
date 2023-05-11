@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+  namespace: posting-system-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-service-pod
+  template:
+    metadata:
+      labels:
+        app: user-service-pod
+    spec:
+      containers:
+        - name: user-service-container
+          image: epamvolodymyrsemerkov/user-service:1.0.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_URL
+              value: jdbc:postgresql://users-db:5432/user
+            - name: DB_USERNAME
+              value: postgres1
+            - name: DB_PASSWORD
+              value: postgres1
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-service-deployment
+  namespace: posting-system-ns
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: post-service-pod
+  template:
+    metadata:
+      labels:
+        app: post-service-pod
+    spec:
+      containers:
+        - name: post-service-container
+          image: epamvolodymyrsemerkov/post-service:1.0.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_URL
+              value: jdbc:postgresql://users-db:5432/post
+            - name: DB_USERNAME
+              value: postgres1
+            - name: DB_PASSWORD
+              value: postgres1
+            - name: USER_SERVICE_URL
+              value: http://user-service:8070
