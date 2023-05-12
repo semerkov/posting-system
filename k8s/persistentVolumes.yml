@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-service-pv
+  namespace: posting-system-ns
+  labels:
+    app: user-service-pod
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/postgres/posting-system/users_db"
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: post-service-pv
+  namespace: posting-system-ns
+  labels:
+    app: post-service-pod
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/postgres/posting-system/posts_db"
