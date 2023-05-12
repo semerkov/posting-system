@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: user-service-ss
+  namespace: posting-system-ns
+spec:
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+        - name: user-db-container
+          image: postgres:15.2-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: user-db-volume
+              mountPath: "/var/lib/postgresql/data"
+          env:
+            - name: POSTGRES_USER
+              value: postgres1
+            - name: POSTGRES_PASSWORD
+              value: postgres1
+            - name: POSTGRES_DB
+              value: user
+  volumeClaimTemplates:
+    - metadata:
+        name: user-db-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 100Mi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: post-service-ss
+  namespace: posting-system-ns
+spec:
+  selector:
+    matchLabels:
+      app: post-db
+  template:
+    metadata:
+      labels:
+        app: post-db
+    spec:
+      containers:
+        - name: post-db-container
+          image: postgres:15.2-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: post-db-volume
+              mountPath: "/var/lib/postgresql/data"
+          env:
+            - name: POSTGRES_USER
+              value: postgres1
+            - name: POSTGRES_PASSWORD
+              value: postgres1
+            - name: POSTGRES_DB
+              value: post
+  volumeClaimTemplates:
+    - metadata:
+        name: post-db-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 100Mi

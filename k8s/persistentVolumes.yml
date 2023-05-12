@@ -14,7 +14,7 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/postgres/posting-system/users_db"
+    path: "/posting-system/users"
 
 ---
 
@@ -34,4 +34,4 @@ spec:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
-    path: "/postgres/posting-system/posts_db"
+    path: "/posting-system/posts"
