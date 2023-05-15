@@ -9,25 +9,7 @@ spec:
   storageClassName: manual
   resources:
     requests:
-      storage: 100Mi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-
----
-
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: post-service-pvc
-  namespace: posting-system-ns
-  labels:
-    app: post-service-pod
-spec:
-  storageClassName: manual
-  resources:
-    requests:
-      storage: 100Mi
+      storage: 5Mi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce

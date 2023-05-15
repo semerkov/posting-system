@@ -8,6 +8,7 @@ spec:
   selector:
     matchLabels:
       app: user-service-pod
+  revisionHistoryLimit: 1
   template:
     metadata:
       labels:
@@ -18,12 +19,19 @@ spec:
           image: epamvolodymyrsemerkov/user-service:1.0.0
           ports:
             - containerPort: 80
+          volumeMounts:
+            - mountPath: "/posting-system/users"
+              name: user-service-volume
           envFrom:
             - configMapRef:
                 name: user-service-pod-config
           env:
             - name: DB_URL
               value: jdbc:postgresql://$(USER_DB_SERVICE_SERVICE_HOST):$(USER_DB_SERVICE_SERVICE_PORT)/user
+      volumes:
+        - name: user-service-volume
+          persistentVolumeClaim:
+            claimName: user-service-pvc
 
 ---
 
@@ -37,6 +45,7 @@ spec:
   selector:
     matchLabels:
       app: post-service-pod
+  revisionHistoryLimit: 1
   template:
     metadata:
       labels:

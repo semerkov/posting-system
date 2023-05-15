@@ -8,30 +8,10 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 100Mi
+    storage: 5Mi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: "/posting-system/users"
-
----
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: post-service-pv
-  namespace: posting-system-ns
-  labels:
-    app: post-service-pod
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 100Mi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  hostPath:
-    path: "/posting-system/posts"
