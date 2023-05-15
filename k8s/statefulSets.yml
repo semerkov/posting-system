@@ -20,13 +20,9 @@ spec:
           volumeMounts:
             - name: user-db-volume
               mountPath: "/var/lib/postgresql/data"
-          env:
-            - name: POSTGRES_USER
-              value: postgres1
-            - name: POSTGRES_PASSWORD
-              value: postgres1
-            - name: POSTGRES_DB
-              value: user
+          envFrom:
+            - configMapRef:
+                name: user-db-config
   volumeClaimTemplates:
     - metadata:
         name: user-db-volume
@@ -61,13 +57,9 @@ spec:
           volumeMounts:
             - name: post-db-volume
               mountPath: "/var/lib/postgresql/data"
-          env:
-            - name: POSTGRES_USER
-              value: postgres1
-            - name: POSTGRES_PASSWORD
-              value: postgres1
-            - name: POSTGRES_DB
-              value: post
+          envFrom:
+            - configMapRef:
+                name: post-db-config
   volumeClaimTemplates:
     - metadata:
         name: post-db-volume

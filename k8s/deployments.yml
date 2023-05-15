@@ -18,13 +18,12 @@ spec:
           image: epamvolodymyrsemerkov/user-service:1.0.0
           ports:
             - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: user-service-pod-config
           env:
             - name: DB_URL
               value: jdbc:postgresql://$(USER_DB_SERVICE_SERVICE_HOST):$(USER_DB_SERVICE_SERVICE_PORT)/user
-            - name: DB_USERNAME
-              value: postgres1
-            - name: DB_PASSWORD
-              value: postgres1
 
 ---
 
@@ -48,12 +47,11 @@ spec:
           image: epamvolodymyrsemerkov/post-service:1.0.0
           ports:
             - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: post-service-pod-config
           env:
             - name: DB_URL
               value: jdbc:postgresql://$(POST_DB_SERVICE_SERVICE_HOST):$(POST_DB_SERVICE_SERVICE_PORT)/post
-            - name: DB_USERNAME
-              value: postgres1
-            - name: DB_PASSWORD
-              value: postgres1
             - name: USER_SERVICE_URL
               value: http://$(USER_SERVICE_SERVICE_HOST):$(USER_SERVICE_SERVICE_PORT)
