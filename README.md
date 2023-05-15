@@ -47,3 +47,29 @@ For deploying the next command are used
 ```shell
 docker-compose up
 ```
+
+## Kubernetes
+
+To deploy, it should be run **kubectl apply** command for files in the **k8s** folder in the following sequence:
+
+```shell
+kubectl apply -f namespace.yml
+kubectl apply -f configMaps.yml
+kubectl apply -f storageClass.yml
+kubectl apply -f persistentVolumes.yml
+kubectl apply -f persistentVolumeClaims.yml
+kubectl apply -f statefulSets.yml
+kubectl apply -f services.yml
+kubectl apply -f deployments.yml
+```
+
+Such as StatefulSet objects' definitions for databases contain volume claim templates
+for PersistentVolume automatically creation with **Delete** reclaim policy then 
+run the next command for each of the persistent volumes:
+
+```shell
+kubectl patch pv [persistent-volume-claim-name] -p "{\"spec\":{\"persistentVolumeReclaimPolicy\":\"Retain\"}}"
+```
+
+The **Retain** reclaim policy allows for manual reclamation of the resource.
+When the PersistentVolumeClaim is deleted, the PersistentVolume still exists and the volume is considered "released".
