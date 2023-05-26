@@ -26,6 +26,19 @@ Publish image to Docker repository
 docker push epamvolodymyrsemerkov/user-service:1.0.0
 ```
 
+### User liquibase changelog
+Build image with tag (1.0.0 in this case)
+
+```shell
+docker build -t epamvolodymyrsemerkov/user-liquibase-changelog:1.0.0 -f ../Dockerfile.liquibase ./
+```
+
+Publish image to Docker repository
+
+```shell
+docker push epamvolodymyrsemerkov/user-liquibase-changelog:1.0.0
+```
+
 ## Post service
 
 Build image with tag (1.0.0 in this case)
@@ -38,6 +51,19 @@ Publish image to Docker repository
 
 ```shell
 docker push epamvolodymyrsemerkov/post-service:1.0.0
+```
+
+### Post liquibase changelog
+Build image with tag (1.0.0 in this case)
+
+```shell
+docker build -t epamvolodymyrsemerkov/post-liquibase-changelog:1.0.0 -f ../Dockerfile.liquibase ./
+```
+
+Publish image to Docker repository
+
+```shell
+docker push epamvolodymyrsemerkov/post-liquibase-changelog:1.0.0
 ```
 
 ## Run
@@ -55,6 +81,7 @@ To deploy, it should be run **kubectl apply** command for files in the **k8s** f
 ```shell
 kubectl apply -f namespace.yml
 kubectl apply -f configMaps.yml
+kubectl apply -f secrets.yml
 kubectl apply -f storageClass.yml
 kubectl apply -f persistentVolumes.yml
 kubectl apply -f persistentVolumeClaims.yml

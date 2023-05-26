@@ -8,26 +8,60 @@ spec:
   selector:
     matchLabels:
       app: user-service-pod
-  revisionHistoryLimit: 1
+  revisionHistoryLimit: 5
   template:
     metadata:
       labels:
         app: user-service-pod
     spec:
+      initContainers:
+        - name: user-liquibase-changelog
+          image: epamvolodymyrsemerkov/user-liquibase-changelog:1.0.0
+          command: [ "liquibase", "update" ]
+          env:
+            - name: LIQUIBASE_COMMAND_URL
+              value: jdbc:postgresql://$(USER_DB_SERVICE_SERVICE_HOST):$(USER_DB_SERVICE_SERVICE_PORT)/user
+            - name: LIQUIBASE_COMMAND_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: username
+            - name: LIQUIBASE_COMMAND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: password
+            - name: LIQUIBASE_COMMAND_CHANGELOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: user-service-config
+                  key: liquibase_changelog_file_path
       containers:
         - name: user-service-container
           image: epamvolodymyrsemerkov/user-service:1.0.0
           ports:
             - containerPort: 80
           volumeMounts:
-            - mountPath: "/posting-system/users"
-              name: user-service-volume
-          envFrom:
-            - configMapRef:
-                name: user-service-pod-config
+            - name: user-service-volume
+              mountPath: "/posting-system/users"
           env:
+            - name: spring.liquibase.enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: user-service-config
+                  key: user_service_liquibase_enabled
             - name: DB_URL
               value: jdbc:postgresql://$(USER_DB_SERVICE_SERVICE_HOST):$(USER_DB_SERVICE_SERVICE_PORT)/user
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: password
       volumes:
         - name: user-service-volume
           persistentVolumeClaim:
@@ -45,22 +79,56 @@ spec:
   selector:
     matchLabels:
       app: post-service-pod
-  revisionHistoryLimit: 1
+  revisionHistoryLimit: 5
   template:
     metadata:
       labels:
         app: post-service-pod
     spec:
+      initContainers:
+        - name: post-liquibase-changelog
+          image: epamvolodymyrsemerkov/post-liquibase-changelog:1.0.0
+          command: [ "liquibase", "update" ]
+          env:
+            - name: LIQUIBASE_COMMAND_URL
+              value: jdbc:postgresql://$(POST_DB_SERVICE_SERVICE_HOST):$(POST_DB_SERVICE_SERVICE_PORT)/post
+            - name: LIQUIBASE_COMMAND_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: username
+            - name: LIQUIBASE_COMMAND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: password
+            - name: LIQUIBASE_COMMAND_CHANGELOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: post-service-config
+                  key: liquibase_changelog_file_path
       containers:
         - name: post-service-container
           image: epamvolodymyrsemerkov/post-service:1.0.0
           ports:
             - containerPort: 80
-          envFrom:
-            - configMapRef:
-                name: post-service-pod-config
           env:
+            - name: spring.liquibase.enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: post-service-config
+                  key: post_service_liquibase_enabled
             - name: DB_URL
               value: jdbc:postgresql://$(POST_DB_SERVICE_SERVICE_HOST):$(POST_DB_SERVICE_SERVICE_PORT)/post
             - name: USER_SERVICE_URL
               value: http://$(USER_SERVICE_SERVICE_HOST):$(USER_SERVICE_SERVICE_PORT)
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: password

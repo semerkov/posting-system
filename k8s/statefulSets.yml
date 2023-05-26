@@ -20,6 +20,17 @@ spec:
           volumeMounts:
             - name: user-db-volume
               mountPath: "/var/lib/postgresql/data"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: user-db-config
@@ -57,6 +68,17 @@ spec:
           volumeMounts:
             - name: post-db-volume
               mountPath: "/var/lib/postgresql/data"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: password
           envFrom:
             - configMapRef:
                 name: post-db-config
