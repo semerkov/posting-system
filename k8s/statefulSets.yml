@@ -34,6 +34,35 @@ spec:
           envFrom:
             - configMapRef:
                 name: user-db-config
+          startupProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
   volumeClaimTemplates:
     - metadata:
         name: user-db-volume
@@ -82,6 +111,35 @@ spec:
           envFrom:
             - configMapRef:
                 name: post-db-config
+          startupProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
   volumeClaimTemplates:
     - metadata:
         name: post-db-volume
