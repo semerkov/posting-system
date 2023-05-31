@@ -14,56 +14,56 @@ Each service uses own database.
 [Postman collection](https://api.postman.com/collections/259611-dde12487-76c8-4369-9bb8-1c6b166f69da?access_key=PMAT-01GYJ7BEBX1AVJ93QCB6BEKW2Y)
 
 ## User service
-Build image with tag (1.0.0 in this case)
+Build image with tag (2.0.0 in this case)
 
 ```shell
-docker build -t epamvolodymyrsemerkov/user-service:1.0.0 ./
+docker build -t epamvolodymyrsemerkov/user-service:2.0.0 ./
 ```
 
 Publish image to Docker repository
 
 ```shell
-docker push epamvolodymyrsemerkov/user-service:1.0.0
+docker push epamvolodymyrsemerkov/user-service:2.0.0
 ```
 
 ### User liquibase changelog
-Build image with tag (1.0.0 in this case)
+Build image with tag (2.0.0 in this case)
 
 ```shell
-docker build -t epamvolodymyrsemerkov/user-liquibase-changelog:1.0.0 -f ../Dockerfile.liquibase ./
+docker build -t epamvolodymyrsemerkov/user-liquibase-changelog:2.0.0 -f ../Dockerfile.liquibase ./
 ```
 
 Publish image to Docker repository
 
 ```shell
-docker push epamvolodymyrsemerkov/user-liquibase-changelog:1.0.0
+docker push epamvolodymyrsemerkov/user-liquibase-changelog:2.0.0
 ```
 
 ## Post service
 
-Build image with tag (1.0.0 in this case)
+Build image with tag (2.0.0 in this case)
 
 ```shell
-docker build -t epamvolodymyrsemerkov/post-service:1.0.0 ./
+docker build -t epamvolodymyrsemerkov/post-service:2.0.0 ./
 ```
 
 Publish image to Docker repository
 
 ```shell
-docker push epamvolodymyrsemerkov/post-service:1.0.0
+docker push epamvolodymyrsemerkov/post-service:2.0.0
 ```
 
 ### Post liquibase changelog
-Build image with tag (1.0.0 in this case)
+Build image with tag (2.0.0 in this case)
 
 ```shell
-docker build -t epamvolodymyrsemerkov/post-liquibase-changelog:1.0.0 -f ../Dockerfile.liquibase ./
+docker build -t epamvolodymyrsemerkov/post-liquibase-changelog:2.0.0 -f ../Dockerfile.liquibase ./
 ```
 
 Publish image to Docker repository
 
 ```shell
-docker push epamvolodymyrsemerkov/post-liquibase-changelog:1.0.0
+docker push epamvolodymyrsemerkov/post-liquibase-changelog:2.0.0
 ```
 
 ## Run

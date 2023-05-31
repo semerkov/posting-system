@@ -51,8 +51,8 @@ public class PostService {
     }
 
     @Transactional
-    public Optional<Post> updateTextAndDateById(long id, String text) {
-        postRepository.updateTextAndDateById(id, text, LocalDateTime.now());
+    public Optional<Post> updateTextAndDateById(long id, String text, String topic) {
+        postRepository.updateTextAndDateById(id, text, LocalDateTime.now(), topic);
         return postRepository.findById(id);
     }
 

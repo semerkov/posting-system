@@ -5,6 +5,10 @@ metadata:
   namespace: posting-system-ns
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: user-service-pod
@@ -16,7 +20,7 @@ spec:
     spec:
       initContainers:
         - name: user-liquibase-changelog
-          image: epamvolodymyrsemerkov/user-liquibase-changelog:1.0.0
+          image: epamvolodymyrsemerkov/user-liquibase-changelog:2.0.0
           command: [ "liquibase", "update" ]
           env:
             - name: LIQUIBASE_COMMAND_URL
@@ -38,7 +42,7 @@ spec:
                   key: liquibase_changelog_file_path
       containers:
         - name: user-service-container
-          image: epamvolodymyrsemerkov/user-service:1.0.0
+          image: epamvolodymyrsemerkov/user-service:2.0.0
           ports:
             - containerPort: 80
           volumeMounts:
@@ -102,6 +106,10 @@ metadata:
   namespace: posting-system-ns
 spec:
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
   selector:
     matchLabels:
       app: post-service-pod
@@ -113,7 +121,7 @@ spec:
     spec:
       initContainers:
         - name: post-liquibase-changelog
-          image: epamvolodymyrsemerkov/post-liquibase-changelog:1.0.0
+          image: epamvolodymyrsemerkov/post-liquibase-changelog:2.0.0
           command: [ "liquibase", "update" ]
           env:
             - name: LIQUIBASE_COMMAND_URL
@@ -135,7 +143,7 @@ spec:
                   key: liquibase_changelog_file_path
       containers:
         - name: post-service-container
-          image: epamvolodymyrsemerkov/post-service:1.0.0
+          image: epamvolodymyrsemerkov/post-service:2.0.0
           ports:
             - containerPort: 80
           env:

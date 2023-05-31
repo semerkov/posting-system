@@ -16,4 +16,7 @@ public class PostRequestDto {
     @NotBlank
     @Size(max = 1000)
     private String text;
+
+    @Size(max = 100)
+    private String topic;
 }

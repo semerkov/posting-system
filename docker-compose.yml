@@ -42,7 +42,7 @@ services:
 
   user-service:
     container_name: user-service
-    image: epamvolodymyrsemerkov/user-service:1.0.0
+    image: epamvolodymyrsemerkov/user-service:2.0.0
     hostname: user-service
     depends_on:
       users-db:
@@ -59,7 +59,7 @@ services:
 
   post-service:
     container_name: post-service
-    image: epamvolodymyrsemerkov/post-service:1.0.0
+    image: epamvolodymyrsemerkov/post-service:2.0.0
     hostname: post-service
     depends_on:
       posts-db:

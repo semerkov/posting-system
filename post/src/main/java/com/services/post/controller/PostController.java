@@ -76,7 +76,7 @@ public class PostController {
             throw new ServiceException(ErrorCode.POST_NOT_FOUND);
         }
 
-        Optional<Post> post = postService.updateTextAndDateById(id, postUpdateRequestDto.getText());
+        Optional<Post> post = postService.updateTextAndDateById(id, postUpdateRequestDto.getText(), postUpdateRequestDto.getTopic());
         return postConverter.convertToPostResponseDto(post.get());
     }
 }

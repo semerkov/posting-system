@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 public interface PostRepository extends CrudRepository<Post, Long> {
 
     @Modifying
-    @Query(value = "UPDATE posts SET text = :text, posted_at = :postedAt WHERE id = :id", nativeQuery = true)
-    void updateTextAndDateById(@Param("id") long id, @Param("text") String text, @Param("postedAt") LocalDateTime postedAt);
+    @Query(value = "UPDATE posts SET text = :text, posted_at = :postedAt, topic = :topic WHERE id = :id", nativeQuery = true)
+    void updateTextAndDateById(@Param("id") long id,
+                               @Param("text") String text,
+                               @Param("postedAt") LocalDateTime postedAt,
+                               @Param("topic") String topic);
 }

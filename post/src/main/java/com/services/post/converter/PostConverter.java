@@ -15,13 +15,17 @@ public class PostConverter {
         post.setAuthorId(postRequestDto.getAuthorId());
         post.setText(postRequestDto.getText());
         post.setPostedAt(LocalDateTime.now());
+        post.setTopic(postRequestDto.getTopic());
         return post;
     }
 
     public PostResponseDto convertToPostResponseDto(Post post) {
-        return new PostResponseDto(post.getId(),
-                post.getAuthorId(),
-                post.getText(),
-                post.getPostedAt());
+        return PostResponseDto.builder()
+                .id(post.getId())
+                .authorId(post.getAuthorId())
+                .text(post.getText())
+                .postedAt(post.getPostedAt())
+                .topic(post.getTopic())
+                .build();
     }
 }

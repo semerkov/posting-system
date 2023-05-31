@@ -42,4 +42,10 @@ public class Post {
      */
     @Column(nullable = false)
     private LocalDateTime postedAt;
+
+    /**
+     * Message topic
+     */
+    @Column(length = 100)
+    private String topic;
 }
