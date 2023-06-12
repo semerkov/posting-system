@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: user-service-config
   namespace: {{ .Values.namespace }}
+  {{- template "postingSystem.labels" .}}
 data:
   # Setting for init container
   liquibase_changelog_file_path: "/changelog/db.changelog-master.xml"
@@ -22,6 +23,7 @@ kind: ConfigMap
 metadata:
   name: post-service-config
   namespace: {{ .Values.namespace }}
+  {{- template "postingSystem.labels" .}}
 data:
   # Setting for init container
   liquibase_changelog_file_path: "/changelog/db.changelog-master.xml"
@@ -41,6 +43,7 @@ kind: ConfigMap
 metadata:
   name: user-db-config
   namespace: {{ .Values.namespace }}
+  {{- template "postingSystem.labels" .}}
 data:
   POSTGRES_DB: "user"
 
@@ -51,5 +54,6 @@ kind: ConfigMap
 metadata:
   name: post-db-config
   namespace: {{ .Values.namespace }}
+  {{- template "postingSystem.labels" .}}
 data:
   POSTGRES_DB: "post"
