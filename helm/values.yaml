@@ -1,0 +1,10 @@
+namespace: posting-system-ns
+replicas: 2
+
+userDb:
+  username: cG9zdGdyZXMx
+  password: cG9zdGdyZXMx
+
+postDb:
+  username: cG9zdGdyZXMx
+  password: cG9zdGdyZXMx

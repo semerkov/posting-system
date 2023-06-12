@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: {{ .Values.namespace }}
+data:
+  # Setting for init container
+  liquibase_changelog_file_path: "/changelog/db.changelog-master.xml"
+
+  # Setting for user service container.
+  # Disable running Liquibase scripts for the service container, such as scripts are run in the init container.
+  # If scripts are run in both containers, it will have a negative effect because of the change set sign of uniqueness.
+  # Change sets will have different filename column values in the databasechangelog table due to file path.
+  # The table tracks each changeset as a row, identified by a combination of the id, author, and filename columns
+  # (https://docs.liquibase.com/concepts/tracking-tables/databasechangelog-table.html).
+  user_service_liquibase_enabled: "false"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-service-config
+  namespace: {{ .Values.namespace }}
+data:
+  # Setting for init container
+  liquibase_changelog_file_path: "/changelog/db.changelog-master.xml"
+
+  # Setting for user service container.
+  # Disable running Liquibase scripts for the service container, such as scripts are run in the init container.
+  # If scripts are run in both containers, it will have a negative effect because of the change set sign of uniqueness.
+  # Change sets will have different filename column values in the databasechangelog table due to file path.
+  # The table tracks each changeset as a row, identified by a combination of the id, author, and filename columns
+  # (https://docs.liquibase.com/concepts/tracking-tables/databasechangelog-table.html).
+  post_service_liquibase_enabled: "false"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-db-config
+  namespace: {{ .Values.namespace }}
+data:
+  POSTGRES_DB: "user"
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-db-config
+  namespace: {{ .Values.namespace }}
+data:
+  POSTGRES_DB: "post"

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: user-service-pv
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: user-service-pod
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Mi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/posting-system/users"

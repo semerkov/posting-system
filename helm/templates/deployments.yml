@@ -1,0 +1,194 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: user-service-pod
+  revisionHistoryLimit: 5
+  template:
+    metadata:
+      labels:
+        app: user-service-pod
+    spec:
+      initContainers:
+        - name: user-liquibase-changelog
+          image: epamvolodymyrsemerkov/user-liquibase-changelog:2.0.0
+          command: [ "liquibase", "update" ]
+          env:
+            - name: LIQUIBASE_COMMAND_URL
+              value: jdbc:postgresql://$(USER_DB_SERVICE_SERVICE_HOST):$(USER_DB_SERVICE_SERVICE_PORT)/user
+            - name: LIQUIBASE_COMMAND_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: username
+            - name: LIQUIBASE_COMMAND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: password
+            - name: LIQUIBASE_COMMAND_CHANGELOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: user-service-config
+                  key: liquibase_changelog_file_path
+      containers:
+        - name: user-service-container
+          image: epamvolodymyrsemerkov/user-service:2.0.0
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: user-service-volume
+              mountPath: "/posting-system/users"
+          env:
+            - name: spring.liquibase.enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: user-service-config
+                  key: user_service_liquibase_enabled
+            - name: DB_URL
+              value: jdbc:postgresql://$(USER_DB_SERVICE_SERVICE_HOST):$(USER_DB_SERVICE_SERVICE_PORT)/user
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: password
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8070
+              scheme: HTTP
+            periodSeconds: 3
+            successThreshold: 1
+            failureThreshold: 20
+            terminationGracePeriodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8070
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8070
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+      volumes:
+        - name: user-service-volume
+          persistentVolumeClaim:
+            claimName: user-service-pvc
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-service-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: post-service-pod
+  revisionHistoryLimit: 5
+  template:
+    metadata:
+      labels:
+        app: post-service-pod
+    spec:
+      initContainers:
+        - name: post-liquibase-changelog
+          image: epamvolodymyrsemerkov/post-liquibase-changelog:2.0.0
+          command: [ "liquibase", "update" ]
+          env:
+            - name: LIQUIBASE_COMMAND_URL
+              value: jdbc:postgresql://$(POST_DB_SERVICE_SERVICE_HOST):$(POST_DB_SERVICE_SERVICE_PORT)/post
+            - name: LIQUIBASE_COMMAND_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: username
+            - name: LIQUIBASE_COMMAND_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: password
+            - name: LIQUIBASE_COMMAND_CHANGELOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: post-service-config
+                  key: liquibase_changelog_file_path
+      containers:
+        - name: post-service-container
+          image: epamvolodymyrsemerkov/post-service:2.0.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: spring.liquibase.enabled
+              valueFrom:
+                configMapKeyRef:
+                  name: post-service-config
+                  key: post_service_liquibase_enabled
+            - name: DB_URL
+              value: jdbc:postgresql://$(POST_DB_SERVICE_SERVICE_HOST):$(POST_DB_SERVICE_SERVICE_PORT)/post
+            - name: USER_SERVICE_URL
+              value: http://$(USER_SERVICE_SERVICE_HOST):$(USER_SERVICE_SERVICE_PORT)
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: password
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8071
+              scheme: HTTP
+            periodSeconds: 3
+            successThreshold: 1
+            failureThreshold: 20
+            terminationGracePeriodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8071
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8071
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1

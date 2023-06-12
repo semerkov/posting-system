@@ -1,0 +1,151 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: user-service-ss
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: user-db
+  template:
+    metadata:
+      labels:
+        app: user-db
+    spec:
+      containers:
+        - name: user-db-container
+          image: postgres:15.2-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: user-db-volume
+              mountPath: "/var/lib/postgresql/data"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: user-db-secret
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: user-db-config
+          startupProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+  volumeClaimTemplates:
+    - metadata:
+        name: user-db-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 100Mi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: post-service-ss
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: post-db
+  template:
+    metadata:
+      labels:
+        app: post-db
+    spec:
+      containers:
+        - name: post-db-container
+          image: postgres:15.2-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: post-db-volume
+              mountPath: "/var/lib/postgresql/data"
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: post-db-secret
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: post-db-config
+          startupProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+            terminationGracePeriodSeconds: 15
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - pg_isready -U $POSTGRES_USER -d $POSTGRES_DB
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+  volumeClaimTemplates:
+    - metadata:
+        name: post-db-volume
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: "hostpath"
+        resources:
+          requests:
+            storage: 100Mi
