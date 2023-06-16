@@ -4,14 +4,13 @@ metadata:
   name: user-service
   namespace: {{ .Values.namespace }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: user-service-pod
   ports:
     - protocol: TCP
       port: 8070
       targetPort: 8070
-      nodePort: 30100
 
 ---
 
@@ -21,14 +20,13 @@ metadata:
   name: post-service
   namespace: {{ .Values.namespace }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: post-service-pod
   ports:
     - protocol: TCP
       port: 8071
       targetPort: 8071
-      nodePort: 30101
 
 ---
 
